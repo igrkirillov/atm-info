@@ -1,0 +1,2 @@
+openssl pkcs12 -export -in apidevelopers.cer -inkey private/apidevelopers_pwd.key -name api.alfabank.ru -out alfabattle.p12
+keytool -importkeystore -destkeystore alfabattle.jks -srckeystore alfabattle.p12 -srcstoretype PKCS12
