@@ -105,14 +105,14 @@ public class AlfaApiImpl implements AlfaApi, InitializingBean {
     private CloseableHttpClient httpClient() throws Exception {
 
         KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-        KeyStore trustStore = KeyStore.getInstance(keyStoreType);
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
 
         InputStream inputStream = resource.getInputStream();
 
         try {
             if (inputStream != null) {
-                trustStore.load(inputStream, keyStorePassword.toCharArray());
-                keyManagerFactory.init(trustStore, keyStorePassword.toCharArray());
+                keyStore.load(inputStream, keyStorePassword.toCharArray());
+                keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
             }
         } finally {
             if (inputStream != null) {
@@ -120,7 +120,7 @@ public class AlfaApiImpl implements AlfaApi, InitializingBean {
             }
         }
 
-        SSLContext sslcontext = SSLContexts.custom().loadTrustMaterial(trustStore, new TrustSelfSignedStrategy()).build();
+        SSLContext sslcontext = SSLContexts.custom().loadTrustMaterial(keyStore, new TrustSelfSignedStrategy()).build();
         sslcontext.init(keyManagerFactory.getKeyManagers(), null, new SecureRandom());
         SSLConnectionSocketFactory sslConnectionSocketFactory =
                 new SSLConnectionSocketFactory(sslcontext, new String[]{"TLSv1.2"}, null, new NoopHostnameVerifier());
